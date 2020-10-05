@@ -13,7 +13,8 @@ class LikeUIControl: UIControl {
     var likeLabel = UILabel ()
     
     var likeButton = UIButton ()
-    var stateLiked : Bool = false
+    var userLike = Bool ()
+    var likesCount = Int ()
     
     override func awakeFromNib() {
         
@@ -30,22 +31,26 @@ class LikeUIControl: UIControl {
         likeLabel.textAlignment = .right
         addSubview(likeLabel)
         addSubview(likeButton)
-        setState (stateLiked)
+        setState ()
     }
     
-    func setState (_ isLiked: Bool) {
+    func setState () {
         
-        likeButton.setTitle(isLiked ? "❤" : "💜", for: .normal)
+        self.likeButton.setTitle(userLike ? "❤" : "💜", for: .normal)
+        self.likeLabel.text = String (likesCount)
         
-        UIView.transition(with: likeLabel, duration: 0.5, options: .transitionFlipFromTop, animations: {self.likeLabel.text = isLiked ? "1" : "0"
-            self.likeLabel.textColor = isLiked ? UIColor.red : UIColor.purple
-        })
+//        UIView.transition(with: likeLabel, duration: 0.5, options: .transitionFlipFromTop, animations: {self.likeLabel.text = isLiked ? "1" : "0"
+//            self.likeLabel.textColor = isLiked ? UIColor.red : UIColor.purple
+//        })
     }
     
     @objc func likeButtonPressed() {
-        stateLiked.toggle()
-        setState (stateLiked)
+        // вызвать запрос на сервер для на установки лайка для фотографии при нажатии на кнопку
+        
+        //stateLiked.toggle()
+        //setState (stateLiked)
     }
+    
     /*
      // Only override draw() if you perform custom drawing.
      // An empty implementation adversely affects performance during animation.

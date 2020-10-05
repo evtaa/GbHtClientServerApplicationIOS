@@ -75,17 +75,29 @@ class MyCommunitiesTableViewCell: UITableViewCell {
         // Initialization code
     }
     
-    func setup (community: Community) {
-        name.text = community.name
-        avatarView.avatarPhoto.image = community.avatar
+    func setup (group: VkApiGroupItem) {
+        name.text = group.name
+        avatarView.avatarPhoto.image  =  self.getUIImageFromURL(inputURL: group.photoLargeURL)
         avatarView.setup()
     }
+    
     
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
         // Configure the view for the selected state
+    }
+    
+    // MARK: CustomFunction
+    
+    func getUIImageFromURL ( inputURL: String) -> UIImage {
+        let url = URL(string: inputURL)
+            if let data = try? Data(contentsOf: url!)
+            {
+                return UIImage(data: data) ?? UIImage()
+            }
+        return  UIImage()
     }
     
 }

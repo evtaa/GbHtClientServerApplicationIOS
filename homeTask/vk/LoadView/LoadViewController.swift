@@ -22,11 +22,6 @@ class LoadViewController: UIViewController {
         super.viewWillAppear(animated)
         
         animatePointLoad ()
-        let vkService = VKService()
-        vkService.getFriends(userId: Session.instance.userId!)
-        vkService.getPhotographes(userId: Session.instance.userId!)
-        vkService.getGroups(userId: Session.instance.userId!)
-        vkService.getGroupsSearch(search: "Music")
         goToTapBarController ()
     }
     

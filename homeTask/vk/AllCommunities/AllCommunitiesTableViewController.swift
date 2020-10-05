@@ -10,30 +10,20 @@ import UIKit
 
 class AllCommunitiesTableViewController: UITableViewController {
     
-    var allCommunities: [Community] = AllCommunitiesFactory.makeAllCommunities()
-     var allCommunitiesSearch: [Community] = []
-    
+    var searchGroups: [VkApiGroupItem]?
+    let vkService = VKService ()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.searchGroups = [VkApiGroupItem]()
+        self.tableView.reloadData()
+        
         // Убираем разделительные линии между пустыми ячейками
         tableView.tableFooterView = UIView ()
         
-        setArrayCommunitySearch(searchText: "")
     }
     
-    func setArrayCommunitySearch (searchText: String ) {
-        allCommunitiesSearch = []
-        for community in allCommunities {
-            let name = community.name
-            if (name.starts(with: searchText) == false) {
-                continue
-            }
-            allCommunitiesSearch.append(community)
-        }
-        
-    }
 
     // MARK: - Table view data source
 
@@ -44,23 +34,39 @@ class AllCommunitiesTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return allCommunitiesSearch.count
+        guard let count  = self.searchGroups?.count else {
+                    return 0
+                }
+        return count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "AllCommunitiesCell", for: indexPath) as! AllCommunitiesTableViewCell
-        let community = allCommunitiesSearch[indexPath.row]
-        cell.setup(community: community)
+       
+        guard let searchGroup  = self.searchGroups?[indexPath.row] else {
+                    return cell
+                }
+        cell.setup(group: searchGroup)
+        
         return cell
+        
     }
 }
 
 extension AllCommunitiesTableViewController: UISearchBarDelegate {
-   
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-           setArrayCommunitySearch(searchText: searchText)
-           tableView.reloadData()
-       }
     
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if searchText == "" {
+            self.searchGroups = [VkApiGroupItem]()
+        }
+        else {
+            vkService.loadSearchGroupsData(search: searchText) { [weak self] searchGroups in
+                // сохраняем полученные данные в массиве
+                self?.searchGroups = searchGroups
+            }
+        }
+        self.tableView.reloadData()
+    }
 }

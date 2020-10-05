@@ -82,11 +82,23 @@ class MyFriendsTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    // MARK: CustomFunction
+    
+    func getUIImageFromURL ( inputURL: String) -> UIImage {
+        let url = URL(string: inputURL)
+            if let data = try? Data(contentsOf: url!)
+            {
+                return UIImage(data: data) ?? UIImage()
+            }
+        return  UIImage()
+    }
+    
     // MARK: Configure Cell
     
-    func setup (user: User) {
-        avatarView.avatarPhoto.image = user.avatar
-        userName.text = user.name
+    func setup (user: VkApiUsersItem) {
+        
+        avatarView.avatarPhoto.image  =  self.getUIImageFromURL(inputURL: user.avatarPhotoURL!)
+        userName.text = user.lastName + " " + user.firstName
         avatarView.setup()
     }
 }

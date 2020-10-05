@@ -10,16 +10,24 @@ import UIKit
 
 class MyFriendsTableViewController: UITableViewController {
     
-    var myFriendsDictionary : [String : [User]] = [:]
-    var myFriendNameSectionTitles : [String] = []
-    var myFriends : [User] = MyFriendsFactory.makeMyFriends()
+    var myFriendsDictionary: [String : [VkApiUsersItem]] = [:]
+    var myFriendNameSectionTitles: [String] = []
+    var myFriends = [VkApiUsersItem] ()
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
+                let vkService = VKService()
+                // отправим запрос для получения  списка друзей
+                vkService.loadFriendsData(userId: String(Session.instance.userId!)) { [weak self] myFriends  in
+                    // сохраняем полученные данные в массиве
+                    self?.myFriends = myFriends
+                    self?.setDictionaryAndSectionTitlesOfMyFriends(searchText: "")
+                    self?.tableView.reloadData()
+                }
         // Убираем разделительные линии между пустыми ячейками
         tableView.tableFooterView = UIView ()
-        
-        setDictionaryAndSectionTitlesOfMyFriends(searchText: "")
     }
     
     func setDictionaryAndSectionTitlesOfMyFriends (searchText: String ) {
@@ -27,7 +35,7 @@ class MyFriendsTableViewController: UITableViewController {
         myFriendsDictionary = [:]
         myFriendNameSectionTitles = []
         for myFriend in myFriends {
-            let name = myFriend.name
+            let name = myFriend.lastName
             if (name.starts(with: searchText) == false) {
                 continue
             }
@@ -49,7 +57,6 @@ class MyFriendsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        //return myFriends.count
         
         let myFriendNameKey = myFriendNameSectionTitles [section]
         if let myFriendValues = myFriendsDictionary [myFriendNameKey] {
@@ -75,10 +82,11 @@ class MyFriendsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return myFriendNameSectionTitles [section]
     }
-//    
-//    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-//        return myFriendNameSectionTitles
-//    }
+
+    
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        return myFriendNameSectionTitles
+    }
     
     // MARK: - Segue
     

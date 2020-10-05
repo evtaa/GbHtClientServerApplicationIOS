@@ -40,7 +40,7 @@ class LoginVkController: UIViewController {
             URLQueryItem(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"),
             URLQueryItem(name: "scope", value: "262150"),
             URLQueryItem(name: "response_type", value: "token"),
-            //URLQueryItem(name: "revoke", value: "1"),
+            URLQueryItem(name: "revoke", value: "1"),
             URLQueryItem(name: "v", value: "5.68")
         ]
         return URLRequest(url: urlComponents.url!)

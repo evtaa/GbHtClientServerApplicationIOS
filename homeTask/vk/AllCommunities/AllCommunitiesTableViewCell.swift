@@ -32,15 +32,6 @@ class AllCommunitiesTableViewCell: UITableViewCell {
                         self.avatarView.avatarPhoto.layer.cornerRadius +=  5
         })
         
-        //        UIView.animate(withDuration: 0.3) {
-        //                   self.avatarView.avatarShadow.bounds.size.height += 10
-        //                   self.avatarView.avatarShadow.bounds.size.width += 10
-        //                   self.avatarView.avatarShadow.layer.cornerRadius +=  5
-        //
-        //                   self.avatarView.avatarPhoto.bounds.size.height += 10
-        //                   self.avatarView.avatarPhoto.bounds.size.width += 10
-        //                   self.avatarView.avatarPhoto.layer.cornerRadius +=  5
-        //               }
     }
     
     @IBAction func upButtonTouchUpOutside(_ sender: Any) {
@@ -84,11 +75,22 @@ class AllCommunitiesTableViewCell: UITableViewCell {
         // Initialization code
     }
     
-    func setup (community: Community) {
+    func setup (group: VkApiGroupItem) {
         
-        name.text = community.name
-        avatarView.avatarPhoto.image = community.avatar
-        avatarView.setup ()
+        name.text = group.name
+        avatarView.avatarPhoto.image  =  self.getUIImageFromURL(inputURL: group.photoLargeURL)
+        avatarView.setup()
+    }
+    
+    // MARK: CustomFunction
+    
+    func getUIImageFromURL ( inputURL: String) -> UIImage {
+        let url = URL(string: inputURL)
+            if let data = try? Data(contentsOf: url!)
+            {
+                return UIImage(data: data) ?? UIImage()
+            }
+        return  UIImage()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -96,5 +98,7 @@ class AllCommunitiesTableViewCell: UITableViewCell {
         
         // Configure the view for the selected state
     }
+    
+    
     
 }

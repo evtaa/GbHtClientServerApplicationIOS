@@ -10,6 +10,9 @@
 		1BD4354612EB0E9C4C880C3D /* Pods_vk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A98A29444E337A488ACD89FC /* Pods_vk.framework */; };
 		52B8B03EAE0917087057747D /* Pods_vkTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0915BF0360910A9D67F006 /* Pods_vkTests.framework */; };
 		875CD74B66B401402C190E18 /* Pods_vk_vkUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 097242C867B56CCCAF86B6EA /* Pods_vk_vkUITests.framework */; };
+		A818A0A9252605F900E10A8A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = A818A0A8252605F900E10A8A /* User.swift */; };
+		A818A0AE2526061000E10A8A /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A818A0AD2526061000E10A8A /* Photo.swift */; };
+		A818A0B32526062600E10A8A /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = A818A0B22526062600E10A8A /* Group.swift */; };
 		A818BE8E2501053F00EEBE6E /* CommentShareUIControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A818BE8D2501053F00EEBE6E /* CommentShareUIControl.swift */; };
 		A82E4F84250521E900F32028 /* LoadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82E4F83250521E900F32028 /* LoadViewController.swift */; };
 		A88CBEF62507CCD600D4FA6B /* PhotosMyFriendsSwipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88CBEF52507CCD600D4FA6B /* PhotosMyFriendsSwipeViewController.swift */; };
@@ -70,6 +73,9 @@
 		47E63B291E45C197B9BF7F32 /* Pods-vk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-vk.debug.xcconfig"; path = "Target Support Files/Pods-vk/Pods-vk.debug.xcconfig"; sourceTree = "<group>"; };
 		A141D3B59019808D020E6E6B /* Pods-vk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-vk.release.xcconfig"; path = "Target Support Files/Pods-vk/Pods-vk.release.xcconfig"; sourceTree = "<group>"; };
 		A5CB0FDB5C6B1C33C16F06A7 /* Pods-vkTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-vkTests.release.xcconfig"; path = "Target Support Files/Pods-vkTests/Pods-vkTests.release.xcconfig"; sourceTree = "<group>"; };
+		A818A0A8252605F900E10A8A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		A818A0AD2526061000E10A8A /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
+		A818A0B22526062600E10A8A /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		A818BE8D2501053F00EEBE6E /* CommentShareUIControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentShareUIControl.swift; sourceTree = "<group>"; };
 		A82E4F83250521E900F32028 /* LoadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadViewController.swift; sourceTree = "<group>"; };
 		A88CBEF52507CCD600D4FA6B /* PhotosMyFriendsSwipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosMyFriendsSwipeViewController.swift; sourceTree = "<group>"; };
@@ -193,6 +199,9 @@
 			children = (
 				A8E496162517A083005BDDA9 /* SessionSingleton.swift */,
 				A8AEB04825211A78009E3780 /* VkServices.swift */,
+				A818A0A8252605F900E10A8A /* User.swift */,
+				A818A0AD2526061000E10A8A /* Photo.swift */,
+				A818A0B22526062600E10A8A /* Group.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -254,11 +263,11 @@
 				A8DB5471250CF16A0001E241 /* CustomInteractiveAnimationsNavigationController */,
 				A82E4F822505219300F32028 /* LoadView */,
 				A8BF596324DD5C2300C9833E /* AllCommunities */,
+				A8BF596C24DD71F700C9833E /* MyCommunities */,
 				A8FEEAEE24DC5B7C008D2B8D /* Myfriends */,
+				A8BF595924DD4CC200C9833E /* PhotosMyFriend */,
 				A818BE8C250104DC00EEBE6E /* UIView */,
 				A8EB8E0924FFD81900C3DCA6 /* MyNews */,
-				A8BF596C24DD71F700C9833E /* MyCommunities */,
-				A8BF595924DD4CC200C9833E /* PhotosMyFriend */,
 				A8FEEAF324DC5E4B008D2B8D /* Model */,
 				A8CD3F0124D2F6F400253484 /* AppDelegate.swift */,
 				A8CD3F0324D2F6F400253484 /* SceneDelegate.swift */,
@@ -579,6 +588,7 @@
 				A8FEEAF524DC5EEA008D2B8D /* UserClass.swift in Sources */,
 				A8C9732A24F7C168008F529D /* LikeUIControl.swift in Sources */,
 				A8EB8E0B24FFD89B00C3DCA6 /* MyNewsTableViewController.swift in Sources */,
+				A818A0A9252605F900E10A8A /* User.swift in Sources */,
 				A8CB045124F65C9A0006C483 /* AvatarCompositeView.swift in Sources */,
 				A8FEEAF924DC6D89008D2B8D /* MyFriendsTableViewCell.swift in Sources */,
 				A88CBEF62507CCD600D4FA6B /* PhotosMyFriendsSwipeViewController.swift in Sources */,
@@ -587,7 +597,9 @@
 				A8DB5477250CFB490001E241 /* CustomNavigationController.swift in Sources */,
 				A8DB5479250D00210001E241 /* CustomInteractiveTransition.swift in Sources */,
 				A8DB5473250CF1970001E241 /* CustomPushAnimator.swift in Sources */,
+				A818A0B32526062600E10A8A /* Group.swift in Sources */,
 				A82E4F84250521E900F32028 /* LoadViewController.swift in Sources */,
+				A818A0AE2526061000E10A8A /* Photo.swift in Sources */,
 				A8AEB046252119BB009E3780 /* LoginVkController.swift in Sources */,
 				A8CD3F0224D2F6F400253484 /* AppDelegate.swift in Sources */,
 				A8BF596B24DD6BA700C9833E /* AllCommunitiesTableViewCell.swift in Sources */,

@@ -10,17 +10,23 @@ import UIKit
 
 class MyCommunitiesTableViewController: UITableViewController {
     
-    var myCommunities : [Community] = []
+    var myGroups: [VkApiGroupItem]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let vkService = VKService ()
+        // отправим запрос для получения  групп пользователя
+        vkService.loadGroupsData(userId: String(Session.instance.userId!)) { [weak self] myGroups in
+            // сохраняем полученные данные в массиве
+            self?.myGroups = myGroups
+            self?.tableView.reloadData()
+        }
         
         // Убираем разделительные линии между пустыми ячейками
         tableView.tableFooterView = UIView ()
         
     }
-    
-    
     
     // MARK: - Table view data source
     
@@ -31,42 +37,51 @@ class MyCommunitiesTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return myCommunities.count
+        
+        guard let count  = self.myGroups?.count else {
+                    return 0
+                }
+        return count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCommunitiesCell", for: indexPath) as! MyCommunitiesTableViewCell
-        let community = myCommunities[indexPath.row]
-        cell.setup(community: community)
+        
+        guard let myGroup  = self.myGroups?[indexPath.row] else {
+                    return cell
+                }
+        cell.setup(group: myGroup)
         
         return cell
     }
     
     // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            myCommunities.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        }
-    }
     
+//    // Здесь нужно вызвать запрос серверу на удаление из группы
+//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//        if editingStyle == .delete {
+//            // Delete the row from the data source
+//            myCommunities.remove(at: indexPath.row)
+//            tableView.deleteRows(at: [indexPath], with: .fade)
+//        }
+//    }
+//
     // MARK: -Segue
-    
-    @IBAction func addCommunity (segue: UIStoryboardSegue) {
-        if segue.identifier == "addCommunity" {
-            let allCommunitiesTableViewController = segue.source as! AllCommunitiesTableViewController
-            if let indexPath = allCommunitiesTableViewController.tableView.indexPathForSelectedRow {
-                let community = allCommunitiesTableViewController.allCommunities [indexPath.row]
-                if !myCommunities.contains(where: {myCommunity -> Bool in
-                    return community == myCommunity
-                }) {
-                    myCommunities.append(community)
-                    tableView.reloadData()
-                }
-            }
-        }
-    }
+    //Здесь нужно вызвать запрос серверу на добавление группы
+//    @IBAction func addCommunity (segue: UIStoryboardSegue) {
+//        if segue.identifier == "addCommunity" {
+//            let allCommunitiesTableViewController = segue.source as! AllCommunitiesTableViewController
+//            if let indexPath = allCommunitiesTableViewController.tableView.indexPathForSelectedRow {
+//                let community = allCommunitiesTableViewController.allCommunities [indexPath.row]
+//                if !myCommunities.contains(where: {myCommunity -> Bool in
+//                    return community == myCommunity
+//                }) {
+//                    myCommunities.append(community)
+//                    tableView.reloadData()
+//                }
+//            }
+//        }
+//    }
     
     /*
      // Override to support conditional editing of the table view.
