@@ -11,11 +11,12 @@ import UIKit
 class MyCommunitiesTableViewController: UITableViewController {
     
     var myGroups: [VkApiGroupItem]?
+    let vkService = VKService ()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let vkService = VKService ()
+        
         // отправим запрос для получения  групп пользователя
         vkService.loadGroupsData(userId: String(Session.instance.userId!)) { [weak self] myGroups in
             // сохраняем полученные данные в массиве

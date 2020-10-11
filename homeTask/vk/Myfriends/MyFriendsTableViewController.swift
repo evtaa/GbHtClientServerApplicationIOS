@@ -13,12 +13,12 @@ class MyFriendsTableViewController: UITableViewController {
     var myFriendsDictionary: [String : [VkApiUsersItem]] = [:]
     var myFriendNameSectionTitles: [String] = []
     var myFriends = [VkApiUsersItem] ()
+    let vkService = VKService()
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
-                let vkService = VKService()
                 // отправим запрос для получения  списка друзей
                 vkService.loadFriendsData(userId: String(Session.instance.userId!)) { [weak self] myFriends  in
                     // сохраняем полученные данные в массиве
@@ -26,6 +26,7 @@ class MyFriendsTableViewController: UITableViewController {
                     self?.setDictionaryAndSectionTitlesOfMyFriends(searchText: "")
                     self?.tableView.reloadData()
                 }
+        
         // Убираем разделительные линии между пустыми ячейками
         tableView.tableFooterView = UIView ()
     }

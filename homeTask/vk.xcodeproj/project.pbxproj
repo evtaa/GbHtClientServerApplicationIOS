@@ -15,6 +15,8 @@
 		A818A0B32526062600E10A8A /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = A818A0B22526062600E10A8A /* Group.swift */; };
 		A818BE8E2501053F00EEBE6E /* CommentShareUIControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A818BE8D2501053F00EEBE6E /* CommentShareUIControl.swift */; };
 		A82E4F84250521E900F32028 /* LoadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82E4F83250521E900F32028 /* LoadViewController.swift */; };
+		A867C866252B1E2100A75D7A /* GroupDB+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A867C864252B1E2100A75D7A /* GroupDB+CoreDataClass.swift */; };
+		A867C867252B1E2100A75D7A /* GroupDB+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A867C865252B1E2100A75D7A /* GroupDB+CoreDataProperties.swift */; };
 		A88CBEF62507CCD600D4FA6B /* PhotosMyFriendsSwipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88CBEF52507CCD600D4FA6B /* PhotosMyFriendsSwipeViewController.swift */; };
 		A8AEB046252119BB009E3780 /* LoginVkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AEB045252119BB009E3780 /* LoginVkController.swift */; };
 		A8AEB04925211A78009E3780 /* VkServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AEB04825211A78009E3780 /* VkServices.swift */; };
@@ -25,6 +27,12 @@
 		A8BF596B24DD6BA700C9833E /* AllCommunitiesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BF596A24DD6BA700C9833E /* AllCommunitiesTableViewCell.swift */; };
 		A8BF596E24DD722800C9833E /* MyCommunitiesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BF596D24DD722800C9833E /* MyCommunitiesTableViewCell.swift */; };
 		A8BF597024DD723B00C9833E /* MyCommunitiesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BF596F24DD723B00C9833E /* MyCommunitiesTableViewController.swift */; };
+		A8C51B1E252A175B00AC0812 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C51B1D252A175B00AC0812 /* CoreDataStack.swift */; };
+		A8C51B77252A1E7E00AC0812 /* VKDataBase.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A8C51B75252A1E7E00AC0812 /* VKDataBase.xcdatamodeld */; };
+		A8C51BAA252A25D400AC0812 /* UserDB+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C51BA8252A25D400AC0812 /* UserDB+CoreDataClass.swift */; };
+		A8C51BAB252A25D400AC0812 /* UserDB+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C51BA9252A25D400AC0812 /* UserDB+CoreDataProperties.swift */; };
+		A8C51BC3252A68EC00AC0812 /* PhotoDB+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C51BC1252A68EC00AC0812 /* PhotoDB+CoreDataClass.swift */; };
+		A8C51BC4252A68EC00AC0812 /* PhotoDB+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C51BC2252A68EC00AC0812 /* PhotoDB+CoreDataProperties.swift */; };
 		A8C9732A24F7C168008F529D /* LikeUIControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C9732924F7C168008F529D /* LikeUIControl.swift */; };
 		A8CB045124F65C9A0006C483 /* AvatarCompositeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8CB045024F65C9A0006C483 /* AvatarCompositeView.swift */; };
 		A8CD3F0224D2F6F400253484 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8CD3F0124D2F6F400253484 /* AppDelegate.swift */; };
@@ -78,6 +86,8 @@
 		A818A0B22526062600E10A8A /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		A818BE8D2501053F00EEBE6E /* CommentShareUIControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentShareUIControl.swift; sourceTree = "<group>"; };
 		A82E4F83250521E900F32028 /* LoadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadViewController.swift; sourceTree = "<group>"; };
+		A867C864252B1E2100A75D7A /* GroupDB+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GroupDB+CoreDataClass.swift"; sourceTree = "<group>"; };
+		A867C865252B1E2100A75D7A /* GroupDB+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GroupDB+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A88CBEF52507CCD600D4FA6B /* PhotosMyFriendsSwipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosMyFriendsSwipeViewController.swift; sourceTree = "<group>"; };
 		A8AEB045252119BB009E3780 /* LoginVkController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVkController.swift; sourceTree = "<group>"; };
 		A8AEB04825211A78009E3780 /* VkServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VkServices.swift; sourceTree = "<group>"; };
@@ -88,6 +98,12 @@
 		A8BF596A24DD6BA700C9833E /* AllCommunitiesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCommunitiesTableViewCell.swift; sourceTree = "<group>"; };
 		A8BF596D24DD722800C9833E /* MyCommunitiesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCommunitiesTableViewCell.swift; sourceTree = "<group>"; };
 		A8BF596F24DD723B00C9833E /* MyCommunitiesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCommunitiesTableViewController.swift; sourceTree = "<group>"; };
+		A8C51B1D252A175B00AC0812 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		A8C51B76252A1E7E00AC0812 /* VKDataBase.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VKDataBase.xcdatamodel; sourceTree = "<group>"; };
+		A8C51BA8252A25D400AC0812 /* UserDB+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDB+CoreDataClass.swift"; sourceTree = "<group>"; };
+		A8C51BA9252A25D400AC0812 /* UserDB+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDB+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A8C51BC1252A68EC00AC0812 /* PhotoDB+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhotoDB+CoreDataClass.swift"; sourceTree = "<group>"; };
+		A8C51BC2252A68EC00AC0812 /* PhotoDB+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhotoDB+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A8C9732924F7C168008F529D /* LikeUIControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeUIControl.swift; sourceTree = "<group>"; };
 		A8CB045024F65C9A0006C483 /* AvatarCompositeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarCompositeView.swift; sourceTree = "<group>"; };
 		A8CD3EFE24D2F6F400253484 /* vk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = vk.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -194,6 +210,15 @@
 			path = LoadView;
 			sourceTree = "<group>";
 		};
+		A867C86B252B1E2A00A75D7A /* GroupDB */ = {
+			isa = PBXGroup;
+			children = (
+				A867C864252B1E2100A75D7A /* GroupDB+CoreDataClass.swift */,
+				A867C865252B1E2100A75D7A /* GroupDB+CoreDataProperties.swift */,
+			);
+			path = GroupDB;
+			sourceTree = "<group>";
+		};
 		A8AEB047252119EE009E3780 /* Session */ = {
 			isa = PBXGroup;
 			children = (
@@ -234,6 +259,24 @@
 			path = MyCommunities;
 			sourceTree = "<group>";
 		};
+		A8C51BAF252A25F300AC0812 /* UserDB */ = {
+			isa = PBXGroup;
+			children = (
+				A8C51BA8252A25D400AC0812 /* UserDB+CoreDataClass.swift */,
+				A8C51BA9252A25D400AC0812 /* UserDB+CoreDataProperties.swift */,
+			);
+			path = UserDB;
+			sourceTree = "<group>";
+		};
+		A8C51BC9252A692400AC0812 /* PhotoDB */ = {
+			isa = PBXGroup;
+			children = (
+				A8C51BC1252A68EC00AC0812 /* PhotoDB+CoreDataClass.swift */,
+				A8C51BC2252A68EC00AC0812 /* PhotoDB+CoreDataProperties.swift */,
+			);
+			path = PhotoDB;
+			sourceTree = "<group>";
+		};
 		A8CD3EF524D2F6F400253484 = {
 			isa = PBXGroup;
 			children = (
@@ -259,6 +302,9 @@
 		A8CD3F0024D2F6F400253484 /* vk */ = {
 			isa = PBXGroup;
 			children = (
+				A8C51BAF252A25F300AC0812 /* UserDB */,
+				A8C51BC9252A692400AC0812 /* PhotoDB */,
+				A867C86B252B1E2A00A75D7A /* GroupDB */,
 				A8AEB047252119EE009E3780 /* Session */,
 				A8DB5471250CF16A0001E241 /* CustomInteractiveAnimationsNavigationController */,
 				A82E4F822505219300F32028 /* LoadView */,
@@ -277,6 +323,8 @@
 				A8CD3F0A24D2F6F800253484 /* Assets.xcassets */,
 				A8CD3F0C24D2F6F800253484 /* LaunchScreen.storyboard */,
 				A8CD3F0F24D2F6F800253484 /* Info.plist */,
+				A8C51B75252A1E7E00AC0812 /* VKDataBase.xcdatamodeld */,
+				A8C51B1D252A175B00AC0812 /* CoreDataStack.swift */,
 			);
 			path = vk;
 			sourceTree = "<group>";
@@ -579,19 +627,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8C51BAB252A25D400AC0812 /* UserDB+CoreDataProperties.swift in Sources */,
 				A8DB5475250CF69C0001E241 /* CustomPopAnimator.swift in Sources */,
 				A8CD3F3424D2F76500253484 /* LoginFormController.swift in Sources */,
+				A867C866252B1E2100A75D7A /* GroupDB+CoreDataClass.swift in Sources */,
 				A8E496172517A083005BDDA9 /* SessionSingleton.swift in Sources */,
 				A8EB8E152500039900C3DCA6 /* NewsClass.swift in Sources */,
 				A8BF595B24DD4D2B00C9833E /* PhotosMyFriendCollectionViewController.swift in Sources */,
+				A8C51B1E252A175B00AC0812 /* CoreDataStack.swift in Sources */,
 				A818BE8E2501053F00EEBE6E /* CommentShareUIControl.swift in Sources */,
+				A8C51BC4252A68EC00AC0812 /* PhotoDB+CoreDataProperties.swift in Sources */,
 				A8FEEAF524DC5EEA008D2B8D /* UserClass.swift in Sources */,
 				A8C9732A24F7C168008F529D /* LikeUIControl.swift in Sources */,
 				A8EB8E0B24FFD89B00C3DCA6 /* MyNewsTableViewController.swift in Sources */,
+				A867C867252B1E2100A75D7A /* GroupDB+CoreDataProperties.swift in Sources */,
 				A818A0A9252605F900E10A8A /* User.swift in Sources */,
 				A8CB045124F65C9A0006C483 /* AvatarCompositeView.swift in Sources */,
 				A8FEEAF924DC6D89008D2B8D /* MyFriendsTableViewCell.swift in Sources */,
 				A88CBEF62507CCD600D4FA6B /* PhotosMyFriendsSwipeViewController.swift in Sources */,
+				A8C51BAA252A25D400AC0812 /* UserDB+CoreDataClass.swift in Sources */,
 				A8AEB04925211A78009E3780 /* VkServices.swift in Sources */,
 				A8EB8E1224FFD97B00C3DCA6 /* MyNewsTableViewCell.swift in Sources */,
 				A8DB5477250CFB490001E241 /* CustomNavigationController.swift in Sources */,
@@ -599,12 +653,14 @@
 				A8DB5473250CF1970001E241 /* CustomPushAnimator.swift in Sources */,
 				A818A0B32526062600E10A8A /* Group.swift in Sources */,
 				A82E4F84250521E900F32028 /* LoadViewController.swift in Sources */,
+				A8C51B77252A1E7E00AC0812 /* VKDataBase.xcdatamodeld in Sources */,
 				A818A0AE2526061000E10A8A /* Photo.swift in Sources */,
 				A8AEB046252119BB009E3780 /* LoginVkController.swift in Sources */,
 				A8CD3F0224D2F6F400253484 /* AppDelegate.swift in Sources */,
 				A8BF596B24DD6BA700C9833E /* AllCommunitiesTableViewCell.swift in Sources */,
 				A8BF596E24DD722800C9833E /* MyCommunitiesTableViewCell.swift in Sources */,
 				A8BF597024DD723B00C9833E /* MyCommunitiesTableViewController.swift in Sources */,
+				A8C51BC3252A68EC00AC0812 /* PhotoDB+CoreDataClass.swift in Sources */,
 				A8FEEAF724DC5F64008D2B8D /* CommunityClass.swift in Sources */,
 				A8BF595D24DD4D7500C9833E /* PhotosMyFriendCollectionViewCell.swift in Sources */,
 				A8BF596924DD6B8D00C9833E /* AllCommunitiesTableViewController.swift in Sources */,
@@ -938,6 +994,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		A8C51B75252A1E7E00AC0812 /* VKDataBase.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				A8C51B76252A1E7E00AC0812 /* VKDataBase.xcdatamodel */,
+			);
+			currentVersion = A8C51B76252A1E7E00AC0812 /* VKDataBase.xcdatamodel */;
+			path = VKDataBase.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = A8CD3EF624D2F6F400253484 /* Project object */;
 }

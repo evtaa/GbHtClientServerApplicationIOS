@@ -21,7 +21,7 @@ class PhotosMyFriendCollectionViewCell: UICollectionViewCell {
     func setup (photoFriend: VkApiPhotoItem) {
         
         let userLike = photoFriend.userLike != 0
-        likeUIControl.likeButton.setTitle(userLike ? "❤" : "💜", for: .normal)
+        likeUIControl.likeButton.setTitle(userLike ? "❤" : "💜", for: .normal)  
         let likesCount = photoFriend.likesCount
         likeUIControl.likeLabel.text = String (likesCount)
         photoImageView.image = getUIImageFromURL(inputURL:photoFriend.photoLargeURL)

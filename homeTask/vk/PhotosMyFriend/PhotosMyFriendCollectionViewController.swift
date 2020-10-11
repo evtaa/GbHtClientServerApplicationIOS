@@ -12,6 +12,7 @@ class PhotosMyFriendCollectionViewController: UICollectionViewController {
     
     var friendSelected : VkApiUsersItem?
     var photosFriend = [VkApiPhotoItem] ()
+    let vkService = VKService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,11 +21,11 @@ class PhotosMyFriendCollectionViewController: UICollectionViewController {
             self.navigationItem.title = lastName + " " + firstName
         }
         
-        let vkService = VKService()
         // отправим запрос для получения  фотографий пользователя
         vkService.loadPhotosData(userId: friendSelected!.id) { [weak self] photos in
          // сохраняем полученные данные в массиве
          self?.photosFriend = photos
+            
         self?.collectionView.reloadData()
      }
         
