@@ -10,23 +10,52 @@ import UIKit
 
 class MyCommunitiesTableViewController: UITableViewController {
     
+    internal let newRefreshControl = UIRefreshControl()
+    
     var myGroups: [VkApiGroupItem]?
     let vkService = VKService ()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        setupTableView ()
+        setupRefreshControl ()
         // отправим запрос для получения  групп пользователя
-        vkService.loadGroupsData(userId: String(Session.instance.userId!)) { [weak self] myGroups in
-            // сохраняем полученные данные в массиве
-            self?.myGroups = myGroups
-            self?.tableView.reloadData()
+        fetchGroupsData()      
+    }
+    
+    private func setupTableView () {
+        
+        // Add Refresh Control to Table View
+        if #available(iOS 10.0, *) {
+            tableView.refreshControl = newRefreshControl
+        } else {
+            tableView.addSubview(newRefreshControl)
         }
         
         // Убираем разделительные линии между пустыми ячейками
         tableView.tableFooterView = UIView ()
+    }
+    
+    private func setupRefreshControl () {
+        // Configure Refresh Control
+        newRefreshControl.addTarget(self, action: #selector(refreshGroupsData(_:)), for: .valueChanged)
+        newRefreshControl.tintColor = UIColor(red: 0.25, green: 0.72, blue: 0.85, alpha: 0.7)
+    }
+    
+    @objc func refreshGroupsData(_ sender: Any) {
         
+        fetchGroupsData ()
+    }
+    
+    private func fetchGroupsData () {
+        
+        vkService.loadGroupsData(userId: String(Session.instance.userId!)) { [weak self] myGroups in
+            // сохраняем полученные данные в массиве
+            self?.myGroups = myGroups
+            self?.tableView.reloadData()
+            self?.newRefreshControl.endRefreshing()
+        }
     }
     
     // MARK: - Table view data source

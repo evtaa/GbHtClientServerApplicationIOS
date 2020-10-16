@@ -10,23 +10,56 @@ import UIKit
 
 class PhotosMyFriendCollectionViewController: UICollectionViewController {
     
+    internal let newRefreshControl = UIRefreshControl()
+    
     var friendSelected : VkApiUsersItem?
     var photosFriend = [VkApiPhotoItem] ()
     let vkService = VKService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let lastName = friendSelected?.lastName,
-            let firstName = friendSelected?.firstName {
-            self.navigationItem.title = lastName + " " + firstName
+        
+        setupCollectionView ()
+        setupRefreshControl ()
+        // отправим запрос для получения  фотографий пользователя
+        fetchPhotosData ()
+    }
+    
+    private func setupCollectionView () {
+        
+        // Add Refresh Control to Table View
+        if #available(iOS 10.0, *) {
+            collectionView.refreshControl = newRefreshControl
+        } else {
+            collectionView.addSubview(newRefreshControl)
         }
         
-        // отправим запрос для получения  фотографий пользователя
+        // Выставляем заголовок в навигации
+        if let lastName = friendSelected?.lastName,
+           let firstName = friendSelected?.firstName {
+            self.navigationItem.title = lastName + " " + firstName
+        }
+    }
+    
+    private func setupRefreshControl () {
+        // Configure Refresh Control
+        newRefreshControl.addTarget(self, action: #selector(refreshPhotosData(_:)), for: .valueChanged)
+        newRefreshControl.tintColor = UIColor(red: 0.25, green: 0.72, blue: 0.85, alpha: 0.7)
+    }
+    
+    
+    @objc func refreshPhotosData(_ sender: Any) {
+        
+        fetchPhotosData ()
+    }
+    
+    private func fetchPhotosData () {
+        
         vkService.loadPhotosData(userId: friendSelected!.id) { [weak self] photos in
          // сохраняем полученные данные в массиве
          self?.photosFriend = photos
-            
         self?.collectionView.reloadData()
+        self?.newRefreshControl.endRefreshing()
      }
         
     }

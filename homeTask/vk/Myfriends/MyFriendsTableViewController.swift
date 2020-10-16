@@ -10,25 +10,55 @@ import UIKit
 
 class MyFriendsTableViewController: UITableViewController {
     
+    internal let newRefreshControl = UIRefreshControl()
+    
     var myFriendsDictionary: [String : [VkApiUsersItem]] = [:]
     var myFriendNameSectionTitles: [String] = []
     var myFriends = [VkApiUsersItem] ()
     let vkService = VKService()
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         
-                // отправим запрос для получения  списка друзей
-                vkService.loadFriendsData(userId: String(Session.instance.userId!)) { [weak self] myFriends  in
-                    // сохраняем полученные данные в массиве
-                    self?.myFriends = myFriends
-                    self?.setDictionaryAndSectionTitlesOfMyFriends(searchText: "")
-                    self?.tableView.reloadData()
-                }
+        setupTableView ()
+        setupRefreshControl ()
+        // отправим запрос для получения  списка друзей
+        fetchFriendsData ()
+    }
+    
+    private func setupTableView () {
+        
+        // Add Refresh Control to Table View
+        if #available(iOS 10.0, *) {
+            tableView.refreshControl = newRefreshControl
+        } else {
+            tableView.addSubview(newRefreshControl)
+        }
         
         // Убираем разделительные линии между пустыми ячейками
         tableView.tableFooterView = UIView ()
+    }
+    
+    private func setupRefreshControl () {
+        // Configure Refresh Control
+        newRefreshControl.addTarget(self, action: #selector(refreshFriendsData(_:)), for: .valueChanged)
+        newRefreshControl.tintColor = UIColor(red: 0.25, green: 0.72, blue: 0.85, alpha: 0.7)
+    }
+    
+    @objc func refreshFriendsData(_ sender: Any) {
+        
+        fetchFriendsData ()
+    }
+    
+    private func fetchFriendsData () {
+        
+        vkService.loadFriendsData(userId: String(Session.instance.userId!)) { [weak self] myFriends  in
+            // сохраняем полученные данные в массиве
+            self?.myFriends = myFriends
+            self?.setDictionaryAndSectionTitlesOfMyFriends(searchText: "")
+            self?.tableView.reloadData()
+            self?.newRefreshControl.endRefreshing()
+        }
     }
     
     func setDictionaryAndSectionTitlesOfMyFriends (searchText: String ) {
