@@ -30,7 +30,7 @@ class VkApiPhotoItem: Object, Decodable {
     @objc  dynamic var photoMediumURL: String = ""
     @objc  dynamic var photoLargeURL: String = ""
     
-    @objc  dynamic var owner: VkApiUsersItem?
+    //@objc  dynamic var owner: VkApiUsersItem?
     
     override static func primaryKey() -> String? {
             return "id"

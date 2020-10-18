@@ -23,6 +23,7 @@ class VkApiUsersItem: Object, Decodable {
     @objc  dynamic var lastName: String = ""
     @objc  dynamic var cityTitle: String = ""
     @objc  dynamic var avatarPhotoURL: String? = ""
+    dynamic var photos = List<VkApiPhotoItem>()
     
     override static func primaryKey() -> String? {
             return "id"

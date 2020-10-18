@@ -8,7 +8,7 @@
 
 import Foundation
 
-class CoreDataSaveService: SaveServiceInterface {
+class CoreDataSaveService {
     
     
     

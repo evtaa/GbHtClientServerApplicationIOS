@@ -9,8 +9,8 @@
 import Foundation
 import RealmSwift
 
-class RealmSaveService: SaveServiceInterface {
-
+class RealmSaveService {
+    
     let realm: Realm
     
     init () {
@@ -36,10 +36,21 @@ class RealmSaveService: SaveServiceInterface {
     // Uploading of users to Realm by primaryKey
     func updateUsers (users: [VkApiUsersItem]) {
         do {
-            let oldFriends = realm.objects(VkApiUsersItem.self)
             realm.beginWrite()
-            realm.delete(oldFriends)
             realm.add (users, update: .all)
+            try realm.commitWrite()
+        }
+        catch {
+            debugPrint (error)
+        }
+    }
+    
+    func deleteUser (user: VkApiUsersItem) {
+        do {
+            guard let user = realm.object(ofType: VkApiUsersItem.self, forPrimaryKey: user.id) else { return }
+            realm.beginWrite()
+             realm.delete(user.photos)
+            realm.delete(user)
             try realm.commitWrite()
         }
         catch {
@@ -49,27 +60,27 @@ class RealmSaveService: SaveServiceInterface {
     
     // Loading of users to Realm
     func readUserList () -> [VkApiUsersItem] {
-            let listFriendsBD = realm.objects(VkApiUsersItem.self).sorted(byKeyPath: "id")
-            
-            var userList:[VkApiUsersItem] = [VkApiUsersItem] ()
-            for object in listFriendsBD {
-                let friend: VkApiUsersItem = VkApiUsersItem ()
-                friend.id = Int(object.id)
-                friend.firstName = object.firstName
-                friend.lastName = object.lastName
-                friend.cityTitle =  object.cityTitle
-                friend.avatarPhotoURL =  object.avatarPhotoURL
-                userList.append(friend)
-            }
-            //return userList.sorted { $0.id < $1.id }
-            return userList
+        let listFriendsBD = realm.objects(VkApiUsersItem.self).sorted(byKeyPath: "id")
+        
+        
+        var userList:[VkApiUsersItem] = [VkApiUsersItem] ()
+        for object in listFriendsBD {
+            let friend: VkApiUsersItem = VkApiUsersItem ()
+            friend.id = Int(object.id)
+            friend.firstName = object.firstName
+            friend.lastName = object.lastName
+            friend.cityTitle =  object.cityTitle
+            friend.avatarPhotoURL =  object.avatarPhotoURL
+            userList.append(friend)
+        }
+        //return userList.sorted { $0.id < $1.id }
+        return userList
     }
     
     //MARK: Function for Photo
     
     // Saving of photos to Realm
     func savePhotos (photos: [VkApiPhotoItem]) {
-        
         do {
             realm.beginWrite()
             realm.add(photos)
@@ -78,30 +89,21 @@ class RealmSaveService: SaveServiceInterface {
         catch {
             print (error)
         }
-        
     }
     
     // Uploading of photos to Realm by primaryKey
-    func updatePhotos (ownerID: Int, photos: [VkApiPhotoItem]) {
+    func updatePhotos (photos: [VkApiPhotoItem], ownerID: Int ) {
         
-        //  Элементам массива фотографий присваиваем свойство owner, содержащее объект класса VkApiUsersItem т.е. создаем связь
-        let userList: [VkApiUsersItem] = self.readUserList()
-        for object in photos {
-            let ownerID = object.ownerId
-            let owner = userList.filter({ $0.id == ownerID }).first
-            object.owner = owner
-        }
-
         do {
+            guard let user = realm.object(ofType: VkApiUsersItem.self, forPrimaryKey: ownerID) else { return }
             let oldPhotos = realm.objects(VkApiPhotoItem.self).filter("ownerId == %@", ownerID)
+            
             realm.beginWrite()
             realm.delete(oldPhotos)
-            //realm.add(userList, update: .all)
-            realm.add (photos, update: .all)
+            user.photos.append(objectsIn: photos)
             try realm.commitWrite()
-        }
-        catch {
-            debugPrint (error)
+        } catch {
+            print(error)
         }
     }
     
@@ -148,6 +150,18 @@ class RealmSaveService: SaveServiceInterface {
             realm.beginWrite()
             realm.delete(oldGroups)
             realm.add (groups, update: .all)
+            try realm.commitWrite()
+        }
+        catch {
+            debugPrint (error)
+        }
+    }
+    
+    func deleteGroup (group: VkApiGroupItem) {
+        do {
+            let deletingGroup = realm.objects(VkApiGroupItem.self).filter("id == %@", group.id)
+            realm.beginWrite()
+            realm.delete(deletingGroup)
             try realm.commitWrite()
         }
         catch {

@@ -7,23 +7,38 @@
 //
 
 import UIKit
+import RealmSwift
+import Realm
 
 class MyFriendsTableViewController: UITableViewController {
     
     internal let newRefreshControl = UIRefreshControl()
     
-    var myFriendsDictionary: [String : [VkApiUsersItem]] = [:]
+    var myFriendsDictionary: [String: [VkApiUsersItem]] = [:]
     var myFriendNameSectionTitles: [String] = []
-    var myFriends = [VkApiUsersItem] ()
+    var myFriends: [VkApiUsersItem]?
     let vkService = VKService()
+    var token: NotificationToken?
+    
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         setupTableView ()
         setupRefreshControl ()
         // отправим запрос для получения  списка друзей
         fetchFriendsData ()
+        pairTableAndRealm { [weak self] myFriends in
+            guard let tableView = self?.tableView else { return }
+            self?.myFriends = myFriends
+            let searchWord = self?.searchBar.text
+            self?.setDictionaryAndSectionTitlesOfMyFriends(searchText: searchWord ?? "")
+            tableView.reloadData()
+            self?.newRefreshControl.endRefreshing()
+        }
     }
     
     private func setupTableView () {
@@ -46,18 +61,50 @@ class MyFriendsTableViewController: UITableViewController {
     }
     
     @objc func refreshFriendsData(_ sender: Any) {
-        
         fetchFriendsData ()
     }
     
     private func fetchFriendsData () {
-        
-        vkService.loadFriendsData(userId: String(Session.instance.userId!)) { [weak self] myFriends  in
-            // сохраняем полученные данные в массиве
-            self?.myFriends = myFriends
-            self?.setDictionaryAndSectionTitlesOfMyFriends(searchText: "")
-            self?.tableView.reloadData()
-            self?.newRefreshControl.endRefreshing()
+        vkService.loadFriendsData(userId: String(Session.instance.userId!))
+    }
+    
+    func pairTableAndRealm(completion: @escaping  ([VkApiUsersItem]) -> Void ) {
+        guard let realm = try? Realm() else { return }
+        let objects = realm.objects(VkApiUsersItem.self)
+        token = objects.observe { (changes: RealmCollectionChange) in
+            switch changes {
+            case .initial (let results):
+                //let myFriends = [VkApiUsersItem](results)
+                var myFriends:[VkApiUsersItem] = [VkApiUsersItem] ()
+                for object in results {
+                    let friend: VkApiUsersItem = VkApiUsersItem ()
+                    friend.id = Int(object.id)
+                    friend.firstName = object.firstName
+                    friend.lastName = object.lastName
+                    friend.cityTitle =  object.cityTitle
+                    friend.avatarPhotoURL =  object.avatarPhotoURL
+                    myFriends.append(friend)
+                }
+                debugPrint(".initial : \(myFriends.count) myFriends loaded from DB")
+                completion(myFriends)
+            case .update(let results, _, _, _):
+                //let myFriends = [VkApiUsersItem](results)
+                var myFriends:[VkApiUsersItem] = [VkApiUsersItem] ()
+                for object in results {
+                    let friend: VkApiUsersItem = VkApiUsersItem ()
+                    friend.id = Int(object.id)
+                    friend.firstName = object.firstName
+                    friend.lastName = object.lastName
+                    friend.cityTitle =  object.cityTitle
+                    friend.avatarPhotoURL =  object.avatarPhotoURL
+                    myFriends.append(friend)
+                }
+                debugPrint(".update : \(myFriends.count) myFriends loaded from DB")
+                completion(myFriends)
+            case .error(let error):
+                debugPrint(".error")
+                debugPrint(error)
+            }
         }
     }
     
@@ -65,6 +112,7 @@ class MyFriendsTableViewController: UITableViewController {
         // Формирование словаря друзей ключ: [друг]  и массива ключей
         myFriendsDictionary = [:]
         myFriendNameSectionTitles = []
+        guard let myFriends = myFriends else {return}
         for myFriend in myFriends {
             let name = myFriend.lastName
             if (name.starts(with: searchText) == false) {
@@ -97,7 +145,6 @@ class MyFriendsTableViewController: UITableViewController {
         
     }
     
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Вытащим ячейку из пула
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyFriendCell", for: indexPath) as! MyFriendsTableViewCell
@@ -113,10 +160,22 @@ class MyFriendsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return myFriendNameSectionTitles [section]
     }
-
+    
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
         return myFriendNameSectionTitles
+    }
+    
+    // MARK: Delete table's row
+    // Здесь нужно вызвать запрос серверу на удаление из группы
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let myFriendNameKey = myFriendNameSectionTitles [indexPath.section]
+            if let myFriendValue = myFriendsDictionary [myFriendNameKey] {
+                let user = myFriendValue [indexPath.row]
+                vkService.realmSaveService.deleteUser(user: user)
+            }
+        }
     }
     
     // MARK: - Segue
@@ -146,24 +205,4 @@ extension MyFriendsTableViewController: UISearchBarDelegate {
         setDictionaryAndSectionTitlesOfMyFriends(searchText: searchText)
         tableView.reloadData()
     }
-    
 }
-
-
-
-//MARK: trash for me
-//    func setDictionaryAndSectionTitlesOfMyFriends (searchText: String ) {
-//        // Формирование словаря друзей ключ: [друг]  и массива ключей
-//        for myFriend in myFriends {
-//            let myFriendNameKey = String (myFriend.name.prefix(1))
-//            if var myFriendValues = myFriendsDictionary [myFriendNameKey] {
-//                // Формирование массива друзей
-//                myFriendValues.append(myFriend)
-//                myFriendsDictionary [myFriendNameKey] = myFriendValues
-//            } else {
-//                myFriendsDictionary [myFriendNameKey] = [myFriend]
-//            }
-//        }
-//        myFriendNameSectionTitles = [String] (myFriendsDictionary.keys)
-//        myFriendNameSectionTitles = myFriendNameSectionTitles.sorted(by: {$0 < $1})
-//    }

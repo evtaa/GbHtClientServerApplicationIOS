@@ -33,9 +33,9 @@ class VKService {
     let baseUrl = "https://api.vk.com/method"
     let realmSaveService = RealmSaveService ()
     let coreDataSaveService = CoreDataSaveService ()
-      
+    
     // Функция получения списка друзей пользователя
-    func loadFriendsData(userId: String, completion: @escaping ([VkApiUsersItem]) -> Void){
+    func loadFriendsData(userId: String){
         
         let path = "/friends.get"
         let parameters: Parameters = [
@@ -61,33 +61,18 @@ class VKService {
                     let VkApiUsersResponseItems = vkApiUsersResponse.response.items
                     
                     // Save user array to Database
-                    
-                    //                    // Working with DataCore
-                    //                    self?.coreDataSaveService.saveUsers(users: VkApiUsersResponseItems)
-                    //                    let userList = self!.coreDataSaveService.readUserList()
-                    
                     // Working with Realm
                     self?.realmSaveService.updateUsers(users: VkApiUsersResponseItems)
-                    let userList = self!.realmSaveService.readUserList()
-                    
-                    for user in userList {
-                        debugPrint("Чтение users из VKDataBase:")
-                        debugPrint( user.id,user.firstName, user.lastName, user.cityTitle, user.avatarPhotoURL ?? "")
-                    }
-                    
-                    completion (userList)
-                    
-                    
-                debugPrint (data)
+                    debugPrint (data)
                 }
                 catch DecodingError.dataCorrupted(let context) {
                     debugPrint(DecodingError.dataCorrupted(context))
                 }
                 catch let error {
-                                    debugPrint("Decoding's error \(url)")
-                                    debugPrint(error)
-                                    debugPrint(String(bytes: data, encoding: .utf8) ?? "")
-                                }
+                    debugPrint("Decoding's error \(url)")
+                    debugPrint(error)
+                    debugPrint(String(bytes: data, encoding: .utf8) ?? "")
+                }
             case .failure(let error):
                 debugPrint(error)
             }
@@ -95,7 +80,7 @@ class VKService {
     }
     
     // Функция получения фотографий пользователя
-    func loadPhotosData (userId: Int, completion: @escaping ([VkApiPhotoItem]) -> Void) {
+    func loadPhotosData (userId: Int) {
         
         let path = "/photos.get"
         let parameters: Parameters = [
@@ -116,40 +101,27 @@ class VKService {
         // составляем URL из базового адреса сервиса и конкретного метода
         let url = baseUrl+path
         // делаем запрос
-      
+        
         Alamofire.request(url, method: .get, parameters: parameters).responseData { [weak self] response in
             switch response.result{
             case .success(let data):
                 do {
                     let  vkApiPhotoResponse = try JSONDecoder().decode (VkApiPhotoResponse.self, from: data)
                     let VkApiPhotosResponseItems = vkApiPhotoResponse.response.items
+                    
                     // Save photos array to Database
-                   
-//                    // Working with DataCore
-//                    self?.coreDataSaveService.savePhotos(photos: VkApiPhotosResponseItems)
-//                    let photoList = self!.coreDataSaveService.readPhotoList()
-                    
                     // Working with Realm
-                    self?.realmSaveService.updatePhotos(ownerID: userId, photos: VkApiPhotosResponseItems)
-                    let photoList = self!.realmSaveService.readPhotoList(ownerID: userId)
-                    
-                    for photo in photoList {
-                        debugPrint("Чтение photos из VKDataBase:")
-                        debugPrint( photo.id,photo.date, photo.ownerId, photo.likesCount, photo.userLike, photo.photoSmallURL, photo.photoMediumURL, photo.photoLargeURL)
-                    }
-                    completion (photoList)
-                    
-                    
-                debugPrint (data)
+                    self?.realmSaveService.updatePhotos(photos: VkApiPhotosResponseItems, ownerID: userId)
+                    debugPrint (data)
                 }
                 catch DecodingError.dataCorrupted(let context) {
                     debugPrint(DecodingError.dataCorrupted(context))
                 }
                 catch let error {
-                                    debugPrint("Decoding's error \(url)")
-                                    debugPrint(error)
-                                    debugPrint(String(bytes: data, encoding: .utf8) ?? "")
-                                }
+                    debugPrint("Decoding's error \(url)")
+                    debugPrint(error)
+                    debugPrint(String(bytes: data, encoding: .utf8) ?? "")
+                }
             case .failure(let error):
                 debugPrint(error)
             }
@@ -157,23 +129,23 @@ class VKService {
     }
     
     // Функция получения списка групп  пользователя
-    func loadGroupsData (userId: String, completion: @escaping ([VkApiGroupItem]) -> Void) {
-           
-           let path = "/groups.get"
-           let parameters: Parameters = [
-               "user_id": userId,
-               "extended": "1",
-               //"filter": "0",
-               //"fields": "0",
-               //"offset": "0",
-               //"count": "50",
-               "v": "5.68",
-               "access_token": Session.instance.token!
-           ]
-           
-           // составляем URL из базового адреса сервиса и конкретного метода
-           let url = baseUrl+path
-           // делаем запрос
+    func loadGroupsData (userId: String) {
+        
+        let path = "/groups.get"
+        let parameters: Parameters = [
+            "user_id": userId,
+            "extended": "1",
+            //"filter": "0",
+            //"fields": "0",
+            //"offset": "0",
+            //"count": "50",
+            "v": "5.68",
+            "access_token": Session.instance.token!
+        ]
+        
+        // составляем URL из базового адреса сервиса и конкретного метода
+        let url = baseUrl+path
+        // делаем запрос
         Alamofire.request(url, method: .get, parameters: parameters).responseData { [weak self] response in
             switch response.result{
             case .success(let data):
@@ -182,38 +154,23 @@ class VKService {
                     let VkApiGroupsResponseItems = vkApiGroupResponse.response.items
                     
                     // Save group array to Database
-                    
-//                    // Working with DataCore
-//                    
-//                    self?.coreDataSaveService.saveGroups(groups: VkApiGroupsResponseItems)
-//                    let groupList = self!.coreDataSaveService.readGroupList()
-                    
                     // Working with Realm
                     self?.realmSaveService.updateGroups(groups:VkApiGroupsResponseItems)
-                    let groupList = self!.realmSaveService.readGroupList()
-
-                    for group in groupList {
-                        debugPrint("Чтение groups из VKDataBase:")
-                        debugPrint( group.id,group.name, group.screenName, group.photoSmallURL, group.photoMediumURL, group.photoLargeURL)
-                    }
-   
-                    completion (groupList)
-                    
-                debugPrint (data)
+                    debugPrint (data)
                 }
                 catch DecodingError.dataCorrupted(let context) {
                     debugPrint(DecodingError.dataCorrupted(context))
                 }
                 catch let error {
-                                    debugPrint("Decoding's error \(url)")
-                                    debugPrint(error)
-                                    debugPrint(String(bytes: data, encoding: .utf8) ?? "")
-                                }
+                    debugPrint("Decoding's error \(url)")
+                    debugPrint(error)
+                    debugPrint(String(bytes: data, encoding: .utf8) ?? "")
+                }
             case .failure(let error):
                 debugPrint(error)
             }
         }
-       }
+    }
     
     // Получения списка групп по заданной подстроке
     func loadSearchGroupsData (search: String, completion: @escaping ([VkApiGroupItem]) -> Void) {
@@ -241,17 +198,17 @@ class VKService {
             case .success(let data):
                 do {
                     let  vkApiSearchGroupResponse = try JSONDecoder().decode (VkApiGroupResponse.self, from: data)
-                completion (vkApiSearchGroupResponse.response.items)
-                debugPrint (data)
+                    completion (vkApiSearchGroupResponse.response.items)
+                    debugPrint (data)
                 }
                 catch DecodingError.dataCorrupted(let context) {
                     debugPrint(DecodingError.dataCorrupted(context))
                 }
                 catch let error {
-                                    debugPrint("Decoding's error \(url)")
-                                    debugPrint(error)
-                                    debugPrint(String(bytes: data, encoding: .utf8) ?? "")
-                                }
+                    debugPrint("Decoding's error \(url)")
+                    debugPrint(error)
+                    debugPrint(String(bytes: data, encoding: .utf8) ?? "")
+                }
             case .failure(let error):
                 debugPrint(error)
             }

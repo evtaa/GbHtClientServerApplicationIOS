@@ -7,13 +7,15 @@
 //
 
 import UIKit
+import RealmSwift
 
 class MyCommunitiesTableViewController: UITableViewController {
     
     internal let newRefreshControl = UIRefreshControl()
-    
+    //var myGroups: Results <VkApiGroupItem>?
     var myGroups: [VkApiGroupItem]?
     let vkService = VKService ()
+    var token: NotificationToken?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +23,13 @@ class MyCommunitiesTableViewController: UITableViewController {
         setupTableView ()
         setupRefreshControl ()
         // отправим запрос для получения  групп пользователя
-        fetchGroupsData()      
+        fetchGroupsData()
+        pairTableAndRealm { [weak self] myGroups in
+            guard let tableView = self?.tableView else { return }
+            self?.myGroups = myGroups
+            tableView.reloadData()
+            self?.newRefreshControl.endRefreshing()
+        }
     }
     
     private func setupTableView () {
@@ -50,14 +58,52 @@ class MyCommunitiesTableViewController: UITableViewController {
     
     private func fetchGroupsData () {
         
-        vkService.loadGroupsData(userId: String(Session.instance.userId!)) { [weak self] myGroups in
-            // сохраняем полученные данные в массиве
-            self?.myGroups = myGroups
-            self?.tableView.reloadData()
-            self?.newRefreshControl.endRefreshing()
-        }
+        vkService.loadGroupsData(userId: String(Session.instance.userId!))
     }
     
+    func pairTableAndRealm(completion: @escaping  ([VkApiGroupItem]) -> Void ) {
+            guard let realm = try? Realm() else { return }
+        let objects = realm.objects(VkApiGroupItem.self)
+        token = objects.observe { (changes: RealmCollectionChange) in
+               // guard let tableView = self?.tableView else { return }
+                switch changes {
+                case .initial (let results):
+                    //let myGroups = [VkApiGroupItem](results)
+                    var myGroups:[VkApiGroupItem] = [VkApiGroupItem] ()
+                    for object in results {
+                        let group: VkApiGroupItem = VkApiGroupItem ()
+                        group.id = Int(object.id)
+                        group.name = object.name
+                        group.screenName = object.screenName
+                        group.photoSmallURL =  object.photoSmallURL
+                        group.photoMediumURL =  object.photoMediumURL
+                        group.photoLargeURL =  object.photoLargeURL
+                        myGroups.append(group)
+                    }
+                    
+                    debugPrint(".initial : \(myGroups.count) myFriends loaded from DB")
+                    completion(myGroups)
+                case .update (let results, _, _, _):
+                    //let myGroups = [VkApiGroupItem](results)
+                    var myGroups:[VkApiGroupItem] = [VkApiGroupItem] ()
+                    for object in results {
+                        let group: VkApiGroupItem = VkApiGroupItem ()
+                        group.id = Int(object.id)
+                        group.name = object.name
+                        group.screenName = object.screenName
+                        group.photoSmallURL =  object.photoSmallURL
+                        group.photoMediumURL =  object.photoMediumURL
+                        group.photoLargeURL =  object.photoLargeURL
+                        myGroups.append(group)
+                    }
+                    debugPrint(".initial : \(myGroups.count) myFriends loaded from DB")
+                    completion(myGroups)
+                case .error(let error):
+                    fatalError("\(error)")
+                }
+            }
+        }
+
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -77,25 +123,25 @@ class MyCommunitiesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCommunitiesCell", for: indexPath) as! MyCommunitiesTableViewCell
         
-        guard let myGroup  = self.myGroups?[indexPath.row] else {
-                    return cell
-                }
+        let numberOfRows = self.tableView.numberOfRows(inSection: 0)
+        guard let myGroup  = self.myGroups? [indexPath.row] else {return cell}
+        guard indexPath.row <= numberOfRows else {return cell}
         cell.setup(group: myGroup)
         
         return cell
     }
     
-    // Override to support editing the table view.
+     //Override to support editing the table view.
     
-//    // Здесь нужно вызвать запрос серверу на удаление из группы
-//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        if editingStyle == .delete {
-//            // Delete the row from the data source
-//            myCommunities.remove(at: indexPath.row)
-//            tableView.deleteRows(at: [indexPath], with: .fade)
-//        }
-//    }
-//
+    // Здесь нужно вызвать запрос серверу на удаление из группы
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            // Delete the row from the data source
+            guard let group = myGroups? [indexPath.row]  else {return}
+            vkService.realmSaveService.deleteGroup(group: group)
+        }
+    }
+
     // MARK: -Segue
     //Здесь нужно вызвать запрос серверу на добавление группы
 //    @IBAction func addCommunity (segue: UIStoryboardSegue) {

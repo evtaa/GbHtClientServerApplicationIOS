@@ -11,7 +11,7 @@ import WebKit
 
 class LoginVkController: UIViewController {
     
-    let client_id = "7610564"
+    let client_id = "7629995"
    
     @IBOutlet weak var webview: WKWebView! {
             didSet{

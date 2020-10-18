@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import RealmSwift
 
 class PhotosMyFriendsSwipeViewController: UIViewController {
     
     var friendSelected : VkApiUsersItem?
-    var photosFriend : [VkApiPhotoItem]?
+    //var photosFriend = List<VkApiPhotoItem>()
+    var photosFriend : [VkApiPhotoItem?]?
     var indexImage : Int = 0
     
     @IBOutlet weak var imageView: UIImageView!
@@ -25,7 +27,7 @@ class PhotosMyFriendsSwipeViewController: UIViewController {
             let firstName = friendSelected?.firstName {
             self.navigationItem.title = lastName + " " + firstName
         }
-        self.imageView.image =  getUIImageFromURL(inputURL: photosFriend![indexImage].photoLargeURL)
+        self.imageView.image =  getUIImageFromURL(inputURL: photosFriend![indexImage]!.photoLargeURL)
         self.imageView.isUserInteractionEnabled = true
         
         //addSwipe ()
@@ -65,7 +67,7 @@ class PhotosMyFriendsSwipeViewController: UIViewController {
             } else {
                 indexImage += 1
             }
-            self.imageView.image = getUIImageFromURL(inputURL: photosFriend![indexImage].photoLargeURL)
+            self.imageView.image = getUIImageFromURL(inputURL: photosFriend![indexImage]!.photoLargeURL)
             
             UIView.animate(withDuration: 1) {
                 let animation = CATransition ()
@@ -81,7 +83,7 @@ class PhotosMyFriendsSwipeViewController: UIViewController {
                 
                 self.imageView.layer.add (animation, forKey: "pageFlipAnimation")
                 // self.containerView.addSubview (self.imageView)
-                self.imageView.image =  self.getUIImageFromURL(inputURL: self.photosFriend![self.indexImage].photoLargeURL)
+                self.imageView.image =  self.getUIImageFromURL(inputURL: self.photosFriend![self.indexImage]!.photoLargeURL)
                
             }
             
@@ -92,7 +94,7 @@ class PhotosMyFriendsSwipeViewController: UIViewController {
             } else {
                 indexImage -= 1
             }
-            self.imageView.image =  self.getUIImageFromURL(inputURL: self.photosFriend![self.indexImage].photoLargeURL)
+            self.imageView.image =  self.getUIImageFromURL(inputURL: self.photosFriend![self.indexImage]!.photoLargeURL)
             
             UIView.animate(withDuration: 1) {
                 let animation = CATransition ()
@@ -108,7 +110,7 @@ class PhotosMyFriendsSwipeViewController: UIViewController {
                 
                 self.imageView.layer.add (animation, forKey: "pageFlipAnimation")
                 // self.containerView.addSubview (self.imageView)
-                self.imageView.image =  self.getUIImageFromURL(inputURL: self.photosFriend![self.indexImage].photoLargeURL)
+                self.imageView.image =  self.getUIImageFromURL(inputURL: self.photosFriend![self.indexImage]!.photoLargeURL)
             }
         default:
             break
