@@ -17,7 +17,7 @@ protocol SaveServiceInterface {
     func readUserList () -> [VkApiUsersItem]
     
     func savePhotos (photos: [VkApiPhotoItem])
-    func updatePhotos (ownerID: Int, photos: [VkApiPhotoItem])
+    func updatePhotos (photos: [VkApiPhotoItem], ownerID: Int)
     func readPhotoList (ownerID: Int) -> [VkApiPhotoItem]
     
     func saveGroups (groups: [VkApiGroupItem])
@@ -33,6 +33,13 @@ class VKService {
     let baseUrl = "https://api.vk.com/method"
     let realmSaveService = RealmSaveService ()
     let coreDataSaveService = CoreDataSaveService ()
+    let firebaseSaveService = FirebaseSaveService ()
+    
+    
+    // Функция сохранения текущего пользователя приложением
+    func saveCurrentUserApplication (userId: Int) {
+        firebaseSaveService.saveCurrentUserApplication (id: userId)
+    }
     
     // Функция получения списка друзей пользователя
     func loadFriendsData(userId: String){
@@ -129,11 +136,11 @@ class VKService {
     }
     
     // Функция получения списка групп  пользователя
-    func loadGroupsData (userId: String) {
+    func loadGroupsData (userId: Int) {
         
         let path = "/groups.get"
         let parameters: Parameters = [
-            "user_id": userId,
+            "user_id": String(userId),
             "extended": "1",
             //"filter": "0",
             //"fields": "0",
@@ -154,8 +161,12 @@ class VKService {
                     let VkApiGroupsResponseItems = vkApiGroupResponse.response.items
                     
                     // Save group array to Database
-                    // Working with Realm
-                    self?.realmSaveService.updateGroups(groups:VkApiGroupsResponseItems)
+                    //                    // Working with Realm
+                    //                    self?.realmSaveService.updateGroups(groups:VkApiGroupsResponseItems)
+                    
+                    // Working with Firebase
+                    self?.firebaseSaveService.updateGroups(groups: VkApiGroupsResponseItems)
+                    
                     debugPrint (data)
                 }
                 catch DecodingError.dataCorrupted(let context) {

@@ -77,6 +77,7 @@ class PhotosMyFriendCollectionViewController: UICollectionViewController {
         token = objects.observe { (changes: RealmCollectionChange) in
             switch changes {
             case .initial (let results):
+                guard !results.isInvalidated else {return}
                 //let photosFriend = [VkApiPhotoItem](results)
                 var photosFriend:[VkApiPhotoItem] = [VkApiPhotoItem] ()
                 for object in results {
@@ -94,6 +95,7 @@ class PhotosMyFriendCollectionViewController: UICollectionViewController {
                 debugPrint(".initial : \(photosFriend.count) photosFriend loaded from DB")
                 completion(photosFriend)
             case .update (let results, _, _, _):
+                guard !results.isInvalidated else {return}
                 //let photosFriend = [VkApiPhotoItem](results)
                     var photosFriend:[VkApiPhotoItem] = [VkApiPhotoItem] ()
                     for object in results {

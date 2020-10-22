@@ -9,6 +9,7 @@
 import UIKit
 import RealmSwift
 import Realm
+import FirebaseDatabase
 
 class MyFriendsTableViewController: UITableViewController {
     
@@ -19,6 +20,7 @@ class MyFriendsTableViewController: UITableViewController {
     var myFriends: [VkApiUsersItem]?
     let vkService = VKService()
     var token: NotificationToken?
+    var usersOfApplication = [FirebaseUser] ()
     
     @IBOutlet weak var searchBar: UISearchBar!
     
@@ -30,6 +32,8 @@ class MyFriendsTableViewController: UITableViewController {
         setupTableView ()
         setupRefreshControl ()
         // отправим запрос для получения  списка друзей
+        vkService.firebaseSaveService.saveCurrentUserApplication(id: Session.instance.userId!)
+        notificationChangingUsersInFirebase ()
         fetchFriendsData ()
         pairTableAndRealm { [weak self] myFriends in
             guard let tableView = self?.tableView else { return }
@@ -68,12 +72,29 @@ class MyFriendsTableViewController: UITableViewController {
         vkService.loadFriendsData(userId: String(Session.instance.userId!))
     }
     
+    // Функция уведомлений о изменениях в списке пользователей приложением
+    private func notificationChangingUsersInFirebase () {
+        //создаем наблюдатель изменений в ветке refBranchUsers
+        vkService.firebaseSaveService.refBranchUsers.observe(.value, with: { snapshot in
+            var users: [FirebaseUser] = []
+            for child in snapshot.children {
+                        if let snapshot = child as? DataSnapshot,
+                           let user = FirebaseUser(snapshot: snapshot) {
+                               users.append(user)
+                        }
+                    }
+            self.usersOfApplication = users
+        })
+        
+    }
+    
     func pairTableAndRealm(completion: @escaping  ([VkApiUsersItem]) -> Void ) {
         guard let realm = try? Realm() else { return }
         let objects = realm.objects(VkApiUsersItem.self)
         token = objects.observe { (changes: RealmCollectionChange) in
             switch changes {
             case .initial (let results):
+                guard !results.isInvalidated else {return}
                 //let myFriends = [VkApiUsersItem](results)
                 var myFriends:[VkApiUsersItem] = [VkApiUsersItem] ()
                 for object in results {
@@ -88,6 +109,7 @@ class MyFriendsTableViewController: UITableViewController {
                 debugPrint(".initial : \(myFriends.count) myFriends loaded from DB")
                 completion(myFriends)
             case .update(let results, _, _, _):
+                guard !results.isInvalidated else {return}
                 //let myFriends = [VkApiUsersItem](results)
                 var myFriends:[VkApiUsersItem] = [VkApiUsersItem] ()
                 for object in results {

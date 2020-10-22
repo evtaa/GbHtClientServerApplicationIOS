@@ -75,7 +75,7 @@ class MyCommunitiesTableViewCell: UITableViewCell {
         // Initialization code
     }
     
-    func setup (group: VkApiGroupItem) {
+    func setup (group: FirebaseGroup) {
         name.text = group.name
         avatarView.avatarPhoto.image  =  self.getUIImageFromURL(inputURL: group.photoLargeURL)
         avatarView.setup()

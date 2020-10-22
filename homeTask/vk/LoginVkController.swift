@@ -8,6 +8,7 @@
 
 import UIKit
 import WebKit
+import FirebaseAuth
 
 class LoginVkController: UIViewController {
     
@@ -21,10 +22,22 @@ class LoginVkController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        signInToFirebase (email: "alex.evtodiy@gmail.com", password: "VKClient")
         let request = getRequestForRegistrationVK(api_id: client_id)
         webview.load(request)
         
+    }
+    
+    func signInToFirebase (email: String, password: String) {
+        Auth.auth().signIn(withEmail: email, password: password) { user, error in
+            if let error = error, user == nil {
+                //self.showAlert(title: "Error", message: error.localizedDescription)
+                debugPrint("Error of authorisation a Firebase: " + error.localizedDescription )
+            }
+            else {
+                debugPrint("Authorisation of Firebase is completed")
+            }
+        }
     }
     
     // Функция формирования запроса для регистрации аккаунта в приложении

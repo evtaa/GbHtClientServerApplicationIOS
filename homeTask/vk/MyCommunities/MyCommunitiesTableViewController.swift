@@ -8,28 +8,27 @@
 
 import UIKit
 import RealmSwift
+import FirebaseDatabase
+import FirebaseAuth
+
 
 class MyCommunitiesTableViewController: UITableViewController {
     
     internal let newRefreshControl = UIRefreshControl()
-    //var myGroups: Results <VkApiGroupItem>?
-    var myGroups: [VkApiGroupItem]?
+    var myGroups = [FirebaseGroup] ()
     let vkService = VKService ()
     var token: NotificationToken?
-    
+    var firebaseSaveService = FirebaseSaveService ()
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupTableView ()
         setupRefreshControl ()
-        // отправим запрос для получения  групп пользователя
+        
+        //отправим запрос для получения  групп пользователя
         fetchGroupsData()
-        pairTableAndRealm { [weak self] myGroups in
-            guard let tableView = self?.tableView else { return }
-            self?.myGroups = myGroups
-            tableView.reloadData()
-            self?.newRefreshControl.endRefreshing()
-        }
+        notificationChangingGroupsInFirebase ()
     }
     
     private func setupTableView () {
@@ -54,55 +53,29 @@ class MyCommunitiesTableViewController: UITableViewController {
     @objc func refreshGroupsData(_ sender: Any) {
         
         fetchGroupsData ()
+        self.newRefreshControl.endRefreshing()
     }
     
     private func fetchGroupsData () {
         
-        vkService.loadGroupsData(userId: String(Session.instance.userId!))
+        vkService.loadGroupsData(userId: Session.instance.userId!)
     }
     
-    func pairTableAndRealm(completion: @escaping  ([VkApiGroupItem]) -> Void ) {
-            guard let realm = try? Realm() else { return }
-        let objects = realm.objects(VkApiGroupItem.self)
-        token = objects.observe { (changes: RealmCollectionChange) in
-               // guard let tableView = self?.tableView else { return }
-                switch changes {
-                case .initial (let results):
-                    //let myGroups = [VkApiGroupItem](results)
-                    var myGroups:[VkApiGroupItem] = [VkApiGroupItem] ()
-                    for object in results {
-                        let group: VkApiGroupItem = VkApiGroupItem ()
-                        group.id = Int(object.id)
-                        group.name = object.name
-                        group.screenName = object.screenName
-                        group.photoSmallURL =  object.photoSmallURL
-                        group.photoMediumURL =  object.photoMediumURL
-                        group.photoLargeURL =  object.photoLargeURL
-                        myGroups.append(group)
+    private func notificationChangingGroupsInFirebase () {
+        //создаем наблюдатель изменений в ветке refBranchUsers
+        firebaseSaveService.refBranchGroups.observe(.value, with: { [weak self] snapshot in
+            var groups: [FirebaseGroup] = []
+            for child in snapshot.children {
+                        if let snapshot = child as? DataSnapshot,
+                           let group = FirebaseGroup(snapshot: snapshot) {
+                               groups.append(group)
+                        }
                     }
-                    
-                    debugPrint(".initial : \(myGroups.count) myFriends loaded from DB")
-                    completion(myGroups)
-                case .update (let results, _, _, _):
-                    //let myGroups = [VkApiGroupItem](results)
-                    var myGroups:[VkApiGroupItem] = [VkApiGroupItem] ()
-                    for object in results {
-                        let group: VkApiGroupItem = VkApiGroupItem ()
-                        group.id = Int(object.id)
-                        group.name = object.name
-                        group.screenName = object.screenName
-                        group.photoSmallURL =  object.photoSmallURL
-                        group.photoMediumURL =  object.photoMediumURL
-                        group.photoLargeURL =  object.photoLargeURL
-                        myGroups.append(group)
-                    }
-                    debugPrint(".initial : \(myGroups.count) myFriends loaded from DB")
-                    completion(myGroups)
-                case .error(let error):
-                    fatalError("\(error)")
-                }
-            }
-        }
+            self?.myGroups = groups
+            self?.tableView.reloadData()
+            self?.newRefreshControl.endRefreshing()
+        })
+    }
 
     // MARK: - Table view data source
     
@@ -114,9 +87,7 @@ class MyCommunitiesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         
-        guard let count  = self.myGroups?.count else {
-                    return 0
-                }
+        let count  = self.myGroups.count
         return count
     }
     
@@ -124,8 +95,9 @@ class MyCommunitiesTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCommunitiesCell", for: indexPath) as! MyCommunitiesTableViewCell
         
         let numberOfRows = self.tableView.numberOfRows(inSection: 0)
-        guard let myGroup  = self.myGroups? [indexPath.row] else {return cell}
         guard indexPath.row <= numberOfRows else {return cell}
+        let myGroup  = self.myGroups [indexPath.row]
+        
         cell.setup(group: myGroup)
         
         return cell
@@ -137,8 +109,8 @@ class MyCommunitiesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-            guard let group = myGroups? [indexPath.row]  else {return}
-            vkService.realmSaveService.deleteGroup(group: group)
+             let group = myGroups [indexPath.row]
+            group.ref?.removeValue()
         }
     }
 

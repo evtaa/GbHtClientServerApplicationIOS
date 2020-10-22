@@ -9,8 +9,8 @@
 import Foundation
 import RealmSwift
 
-class RealmSaveService {
-    
+class RealmSaveService: SaveServiceInterface  {
+     
     let realm: Realm
     
     init () {
