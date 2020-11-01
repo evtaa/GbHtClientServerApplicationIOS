@@ -16,6 +16,7 @@ class MyNewsTableViewCell: UITableViewCell {
     @IBOutlet weak var date: UILabel!
     @IBOutlet weak var contentLabelNews: UILabel!
     @IBOutlet weak var imageContentView: UIImageView!
+    @IBOutlet weak var likeUIControl: LikeUIControl!
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -35,19 +36,22 @@ class MyNewsTableViewCell: UITableViewCell {
         // Initialization code
     }
     
-    func setup (new: New) {
-        avatarMyFriendNews.image = new.myFriend.avatar
-        
-        nameMyFriendNews.text = new.myFriend.name
-        
+    func setup (new: VkApiNewItem) {
+        avatarMyFriendNews.image = getUIImageFromURL(inputURL: new.avatarImageURL ?? "")
+        nameMyFriendNews.text = new.nameGroupOrUser
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-        let dateOfNew = dateFormatter.string(from: new.date)
-        date.text = dateOfNew
+        dateFormatter.timeStyle = .short
+        date.text = dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(new.date)))
         
-        contentLabelNews.text = new.contentText
-        imageContentView.image = new.contentImage
+        contentLabelNews.text = new.text
+        imageContentView.image = getUIImageFromURL(inputURL: new.photoImageURL ?? "")
+        
+        let userLike = new.userLikes != 0
+        likeUIControl.likeButton.setTitle(userLike ? "❤" : "💜", for: .normal)
+        let likesCount = new.likesCount
+        likeUIControl.likeLabel.text = String (likesCount)
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -56,4 +60,14 @@ class MyNewsTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    // MARK: CustomFunction
+    
+    func getUIImageFromURL ( inputURL: String) -> UIImage {
+        let url = URL(string: inputURL)
+        if let data = try? Data(contentsOf: url!)
+            {
+                return UIImage(data: data) ?? UIImage()
+            }
+        return  UIImage()
+    }
 }
